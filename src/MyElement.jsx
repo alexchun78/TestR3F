@@ -1,52 +1,21 @@
 import React,{useRef,useEffect} from 'react'
 import { OrbitControls, Box } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three';
 import {useControls} from 'leva';
 
 function MyElement3D() {
   const refMesh = useRef();  
   const refMeshWireFrame = useRef();
-
-  const {radius, widthSegments, heightSegments} = useControls ({
-    radius:{
-      value: 1,
-      min: 0.1,
-      max: 5,
-      step: 0.01
-    }, 
-    widthSegments:{
-      value: 32,
-      min: 3,
-      max: 256,
-      step: 1
-    }, 
-    heightSegments:{
-      value: 16,
-      min: 2,
-      max: 256,
-      step: 1
-    }, 
-    // phiStart:{
-
-    // },
-    // phiLength: {
-
-    // },
-    // thetaStart:{
-
-    // },
-    // thetaLength:{
-
-    // },
-  });
+  const { scene } = useThree()
   useEffect(()=>{
     refMeshWireFrame.current.geometry = refMesh.current.geometry;
-  },
-  // [radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength]
-  [radius, widthSegments, heightSegments]
+    if(!refMesh.current.boundingBox){
+      console.log(refMesh.current);
+    }
+    }, [] 
   );
-  
+
   return (
     <>      
       <ambientLight intensity={0.1}/>
@@ -54,9 +23,14 @@ function MyElement3D() {
       <directionalLight position={[1,2,8]} intensity={0.7}/>
       <axesHelper scale={10}/>
       <OrbitControls/>
-      
+
+      <mesh position={[0,-0.5,0]}>
+        <boxGeometry args={[3,.1,3,1,1,1]} />
+        <meshStandardMaterial opacity={0.5} transparent={true}/>
+      </mesh>
+
       <mesh ref = {refMesh}> 
-        <sphereGeometry args={[radius,widthSegments,heightSegments]}/>
+        <boxGeometry width={[]} args={[1,1,1,1,1,1]}/>
         <meshLambertMaterial color="#1abc9c" opacity={1} transparent={true}/>
       </mesh>
 
