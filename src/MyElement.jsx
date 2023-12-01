@@ -8,58 +8,56 @@ function MyElement3D() {
   const refMesh = useRef();  
   const refMeshWireFrame = useRef();
 
-  const {xSize,ySize,zSize,xDivide,yDivide,zDivide} = useControls ({
-    xSize: {
+  const {radius, widthSegments, heightSegments} = useControls ({
+    radius:{
       value: 1,
       min: 0.1,
       max: 5,
       step: 0.01
-    },
-    ySize: {
-      value: 1,
-      min: 0.1,
-      max: 5,
-      step: 0.01
-    },
-    zSize: {
-      value: 1,
-      min: 0.1,
-      max: 5,
-      step: 0.01
-    },
-    xDivide: {
-      value: 1,
-      min: 1,
-      max: 8,
+    }, 
+    widthSegments:{
+      value: 32,
+      min: 3,
+      max: 256,
       step: 1
-    },
-    yDivide: {
-      value: 1,
-      min: 1,
-      max: 8,
+    }, 
+    heightSegments:{
+      value: 16,
+      min: 2,
+      max: 256,
       step: 1
-    },
-    zDivide: {
-      value: 1,
-      min: 1,
-      max: 8,
-      step: 1
-    },
+    }, 
+    // phiStart:{
+
+    // },
+    // phiLength: {
+
+    // },
+    // thetaStart:{
+
+    // },
+    // thetaLength:{
+
+    // },
   });
   useEffect(()=>{
     refMeshWireFrame.current.geometry = refMesh.current.geometry;
-  },[xSize,ySize,zSize,xDivide,yDivide,zDivide]);
+  },
+  // [radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength]
+  [radius, widthSegments, heightSegments]
+  );
   
   return (
     <>      
       <ambientLight intensity={0.1}/>
-      <directionalLight position={[0,3,2]}/>
+      <directionalLight position={[0,1,0]}/>
+      <directionalLight position={[1,2,8]} intensity={0.7}/>
       <axesHelper scale={10}/>
       <OrbitControls/>
       
       <mesh ref = {refMesh}> 
-        <boxGeometry args={[xSize,ySize,zSize,xDivide,yDivide,zDivide]}/>          
-        <meshStandardMaterial color="#e67e22" opacity={0.7} transparent={true}/>
+        <sphereGeometry args={[radius,widthSegments,heightSegments]}/>
+        <meshLambertMaterial color="#1abc9c" opacity={1} transparent={true}/>
       </mesh>
 
       <mesh ref = {refMeshWireFrame}>
